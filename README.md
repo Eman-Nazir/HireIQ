@@ -71,8 +71,7 @@ It's also a deliberate showcase of production-grade patterns beyond basic CRUD: 
 |---|---|---|
 | ![Admin](docs/screenshots/07-admin-dashboard.png) | ![Users](docs/screenshots/08-admin-users.png) | ![Dark](docs/screenshots/09-dark-mode.png) |
 
-<p align="center"><img src="docs/screenshots/10-mobile-view.png" width="280" alt="Mobile view" /></p>
-
+![Mobile view](docs/screenshots/10-mobile-view.png)
 ---
 
 ## Tech Stack
@@ -204,7 +203,6 @@ These are intentionally deferred, not oversights — the architecture is designe
 
 **Eman Nazir** — MERN Stack Developer
 
-Built as part of the [#100DaysOfWebDevelopment](#) challenge, under mentorship at ZACoders.
 
 <a href="https://github.com/Eman-Nazir"><img src="https://img.shields.io/badge/GitHub-Eman--Nazir-181717?style=flat-square&logo=github" /></a>
-<a href="#"><img src="https://img.shields.io/badge/LinkedIn-Connect-0a66c2?style=flat-square&logo=linkedin" /></a>
+<a href="inkedin.com/in/eman-nazir-231145316/"><img src="https://img.shields.io/badge/LinkedIn-Connect-0a66c2?style=flat-square&logo=linkedin" /></a>
