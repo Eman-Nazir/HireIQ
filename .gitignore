@@ -26,6 +26,10 @@ server/public/temp/*
 npm-debug.log*
 yarn-debug.log*
 
+# Cookies from local API testing
+cookies.txt
+server/cookies.txt
+
 # OS files
 .DS_Store
 Thumbs.db
