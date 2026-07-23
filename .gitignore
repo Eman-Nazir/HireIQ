@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Environment variables — NEVER push these
+.env
+client/.env
+server/.env
+.env.local
+.env.production
+
+# Build outputs
+dist/
+build/
+client/dist/
+client/build/
+server/dist/
+
+# Multer temp uploads — never push user files
+server/public/temp/*
+!server/public/temp/.gitkeep
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor folders
+.vscode/
+.idea/
+
+# Optional — example env files ARE pushed (no secrets inside)
+# !.env.example
