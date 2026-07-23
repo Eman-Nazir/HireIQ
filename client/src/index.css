@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary-50: #e8f0fe;
+  --color-primary-100: #c3d9fb;
+  --color-primary-400: #4d94e8;
+  --color-primary-500: #0a66c2;
+  --color-primary-600: #084d94;
+  --color-primary-700: #063a70;
+
+  --color-accent-500: #057642;
+
+  --color-surface: #f3f2ef;
+  --color-surface-card: #ffffff;
+  --color-surface-elevated: #ffffff;
+  --color-border: #e0dfdc;
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #56585b;
+  --color-text-muted: #86888a;
+
+  --font-sans: "Inter", system-ui, sans-serif;
+}
+
+[data-theme="dark"] {
+  --color-primary-50: #0c1a2e;
+  --color-primary-100: #14294a;
+  --color-primary-400: #4d94e8;
+  --color-primary-500: #4d94e8;
+  --color-primary-600: #6ba8ec;
+  --color-primary-700: #8fbdf0;
+
+  --color-accent-500: #34c77b;
+
+  --color-surface: #101114;
+  --color-surface-card: #17181c;
+  --color-surface-elevated: #1d1e23;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-text-primary: #f2f2f2;
+  --color-text-secondary: #a3a3a3;
+  --color-text-muted: #6b6b6b;
+}
+
+
+button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+body {
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+
