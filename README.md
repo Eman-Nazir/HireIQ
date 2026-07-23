@@ -72,7 +72,6 @@ It's also a deliberate showcase of production-grade patterns beyond basic CRUD: 
 | ![Admin](docs/screenshots/07-admin-dashboard.png) | ![Users](docs/screenshots/08-admin-users.png) | ![Dark](docs/screenshots/09-dark-mode.png) |
 
 
-
 ![Mobile view](docs/screenshots/10-mobile-view.png)
 
 ---
