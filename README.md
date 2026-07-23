@@ -88,17 +88,19 @@ It's also a deliberate showcase of production-grade patterns beyond basic CRUD: 
 
 ## Architecture
 
-┌──────────────┐ REST API ┌──────────────┐
-│ React Client │ ─────────────────────▶ │ Express Server│
-│ (Vite) │ ◀───────────────────── │ │
-└──────────────┘ └───────┬───────┘
-│
-┌─────────────────────────┼─────────────────────────┐
-▼ ▼ ▼
-┌───────────────┐ ┌────────────────┐ ┌───────────────┐
-│ MongoDB │ │ Google Gemini │ │ Cloudinary │
-│ (Atlas) │ │ (AI scoring) │ │ (PDF storage) │
-└───────────────┘ └────────────────┘ └───────────────┘
+
+| Layer | Technology | Role |
+|---|---|---|
+| **Client** | React + Vite | UI, routing, state management |
+| **Server** | Express (Node.js) | REST API, business logic |
+| **Database** | MongoDB Atlas | Users, resumes, applications, audit logs |
+| **AI** | Google Gemini | Resume scoring, interview question generation |
+| **File Storage** | Cloudinary | Resume PDF hosting |
+| **Auth** | Google OAuth + JWT | Login, session management |
+
+**Flow:** Client → REST API → Server → (MongoDB / Gemini / Cloudinary)
+
+Auth flows through Google OAuth (Passport) → access token (15 min) + refresh token (7 days, hashed, rotated) → stored in httpOnly cookies.
 
 
 Auth flows through Google OAuth (Passport) → access token (15 min) + refresh token (7 days, hashed, rotated) → stored in httpOnly cookies.
