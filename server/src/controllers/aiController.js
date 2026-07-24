@@ -2,6 +2,35 @@ import Resume from '../models/Resume.js';
 import { scoreResumeAgainstJD, generateInterviewQuestions } from '../services/aiService.js';
 import { successResponse, errorResponse } from '../utils/apiResponse.js';
 
+const MIN_JD_LENGTH = 100;
+const MIN_WORD_COUNT = 15;
+
+const isValidJobDescription = (text) => {
+  if (!text) return false;
+  const trimmed = text.trim();
+
+  if (trimmed.length < MIN_JD_LENGTH) return false;
+
+  // Count actual distinct words, not just characters
+  const words = trimmed.split(/\s+/).filter(Boolean);
+  if (words.length < MIN_WORD_COUNT) return false;
+
+  // Reject if too few unique words relative to total (catches "nnnn..." or "aaaa bbbb aaaa bbbb")
+  const uniqueWords = new Set(words.map((w) => w.toLowerCase()));
+  if (uniqueWords.size < MIN_WORD_COUNT * 0.5) return false;
+
+  // Reject if the text is dominated by a single repeated character (catches "nnnnnnnn...")
+  const charCounts = {};
+  for (const char of trimmed.toLowerCase().replace(/\s/g, '')) {
+    charCounts[char] = (charCounts[char] || 0) + 1;
+  }
+  const totalChars = trimmed.replace(/\s/g, '').length;
+  const maxCharRatio = Math.max(...Object.values(charCounts)) / totalChars;
+  if (maxCharRatio > 0.4) return false; // any single character making up >40% of text = spam
+
+  return true;
+};
+
 // POST /api/ai/score/:resumeId
 export const scoreResume = async (req, res) => {
   try {
@@ -9,12 +38,17 @@ export const scoreResume = async (req, res) => {
     if (!resume) return errorResponse(res, 404, 'Resume not found');
 
     const jobDescription = req.body.jobDescription || resume.jobDescription;
-    if (!jobDescription) return errorResponse(res, 400, 'Job description required for scoring');
+
+    if (!isValidJobDescription(jobDescription)) {
+      return errorResponse(
+        res,
+        400,
+        'Please paste a real job description with role details, responsibilities, and requirements — not placeholder or repeated text.'
+      );
+    }
 
     const result = await scoreResumeAgainstJD(resume.parsedText, jobDescription);
-console.log("Resume text length:", resume.parsedText.length);
-console.log("Job description length:", jobDescription.length);
-console.log("Resume preview:", resume.parsedText.substring(0, 300));
+
     resume.atsScore = result.atsScore;
     resume.suggestions = result.suggestions;
     resume.jobDescription = jobDescription;
@@ -39,7 +73,14 @@ export const getInterviewQuestions = async (req, res) => {
     if (!resume) return errorResponse(res, 404, 'Resume not found');
 
     const jobDescription = req.body.jobDescription || resume.jobDescription;
-    if (!jobDescription) return errorResponse(res, 400, 'Job description required');
+
+    if (!isValidJobDescription(jobDescription)) {
+      return errorResponse(
+        res,
+        400,
+        'Please paste a real job description with role details, responsibilities, and requirements — not placeholder or repeated text.'
+      );
+    }
 
     const questions = await generateInterviewQuestions(jobDescription, resume.parsedText);
 

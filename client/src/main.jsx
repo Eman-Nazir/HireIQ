@@ -19,7 +19,7 @@ function ToastBridge({ children }) {
 }
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  
     <ErrorBoundary>
       <BrowserRouter>
         <ThemeProvider>
@@ -35,5 +35,5 @@ createRoot(document.getElementById('root')).render(
         </ThemeProvider>
       </BrowserRouter>
     </ErrorBoundary>
-  </StrictMode>
+ 
 );
