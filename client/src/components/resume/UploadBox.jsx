@@ -35,7 +35,7 @@ export default function UploadBox() {
           showToast('Resume uploaded successfully', 'success');
         },
         onError: (err) => {
-          showToast(err?.response?.data?.message || 'Upload failed', 'error');
+          showToast(err.userMessage, 'error');
         },
       }
     );
@@ -86,7 +86,7 @@ export default function UploadBox() {
         {isPending ? 'Uploading...' : 'Upload Resume'}
       </Button>
 
-      {isError && <p className="text-xs text-red-500 mt-2">{error?.response?.data?.message || 'Upload failed'}</p>}
+      {isError && <p className="text-xs text-red-500 mt-2">{error.userMessage}</p>}
     </div>
   );
 }
