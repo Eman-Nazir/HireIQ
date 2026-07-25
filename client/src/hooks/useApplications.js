@@ -42,7 +42,6 @@ export const useUpdateApplicationStatus = () => {
       const { data } = await api.patch(`/application/${id}/status`, { status });
       return data.data;
     },
-    // Optimistic update — Kanban feels instant instead of waiting for the server
     onMutate: async ({ id, status }) => {
       await queryClient.cancelQueries({ queryKey: ['applications'] });
       const previous = queryClient.getQueryData(['applications']);
@@ -54,7 +53,7 @@ export const useUpdateApplicationStatus = () => {
       return { previous };
     },
     onError: (err, variables, context) => {
-      queryClient.setQueryData(['applications'], context.previous); // rollback on failure
+      queryClient.setQueryData(['applications'], context.previous); 
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['applications'] });
