@@ -8,6 +8,6 @@ export const extractTextFromPDF = async (fileBuffer) => {
   } catch (error) {
     throw new Error('Failed to parse PDF: ' + error.message);
   } finally {
-    await parser.destroy(); // releases resources — required by v2's API
+    await parser.destroy(); 
   }
 };
