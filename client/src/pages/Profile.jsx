@@ -20,7 +20,7 @@ export default function Profile() {
       await updateProfile(name);
       showToast('Profile updated successfully', 'success');
     } catch (err) {
-      showToast(err?.response?.data?.message || 'Failed to update profile', 'error');
+      showToast(err.userMessage, 'error');
     } finally {
       setIsSaving(false);
     }
