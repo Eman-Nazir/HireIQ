@@ -4,12 +4,12 @@ import ProtectedRoute from './components/ProtectedRoute';
 import DashboardLayout from './layouts/DashboardLayout';
 import AdminLayout from './layouts/AdminLayout';
 
-// Public pages load immediately — small and needed right away
+// Public pages load immediately small and needed right away
 import Landing from './pages/Landing';
 import Login from './pages/Login';
 import NotFound from './pages/NotFound';
 
-// Everything behind login loads lazily — split into separate chunks
+// Everything behind login loads lazily  split into separate chunks
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const ResumeAnalyzer = lazy(() => import('./pages/ResumeAnalyzer'));
 const JobTracker = lazy(() => import('./pages/JobTracker'));
