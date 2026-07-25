@@ -15,9 +15,19 @@ export function ToastProvider({ children }) {
   const [toasts, setToasts] = useState([]);
 
   const showToast = useCallback((message, type = 'success') => {
-    const id = Date.now();
-    setToasts((prev) => [...prev, { id, message, type }]);
-    setTimeout(() => setToasts((prev) => prev.filter((t) => t.id !== id)), 3500);
+    setToasts((prev) => {
+      if (prev.some((t) => t.message === message && t.type === type)) {
+        return prev;
+      }
+
+      const id = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
+      setTimeout(() => {
+        setToasts((p) => p.filter((t) => t.id !== id));
+      }, 3500);
+
+      return [...prev, { id, message, type }];
+    });
   }, []);
 
   return (
