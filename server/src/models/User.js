@@ -11,7 +11,6 @@ const userSchema = new mongoose.Schema(
   select: false,
   validate: {
     validator: function (value) {
-      // Only validate if a password is being set (OAuth users won't have one)
       if (!value) return true;
       return validator.isStrongPassword(value, {
         minLength: 8,
