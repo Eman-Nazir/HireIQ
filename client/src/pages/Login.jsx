@@ -37,7 +37,7 @@ export default function Login() {
       showToast(isRegisterMode ? 'Account created successfully' : 'Welcome back!', 'success');
       redirectAfterAuth(result.data.user);
     } catch (err) {
-      const message = err.response?.data?.message || 'Something went wrong. Please try again.';
+      const message = err.userMessage;
       setError(message);
       showToast(message, 'error');
     } finally {
