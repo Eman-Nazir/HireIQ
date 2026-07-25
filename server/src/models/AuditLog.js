@@ -9,7 +9,7 @@ const auditLogSchema = new mongoose.Schema(
       required: true,
     },
     performedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    performedByEmail: { type: String, required: true }, // denormalized — survives even if the admin account is later deleted
+    performedByEmail: { type: String, required: true }, 
     targetUser: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     targetUserEmail: { type: String, required: true },
     details: { type: String },
