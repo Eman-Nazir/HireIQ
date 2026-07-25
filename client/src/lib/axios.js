@@ -3,7 +3,7 @@ import axios from 'axios';
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   withCredentials: true,
-  timeout: 30000, // 30s — prevents infinite hanging requests
+  timeout: 30000, 
 });
 
 let isRefreshing = false;
@@ -14,14 +14,23 @@ const processQueue = (error) => {
   failedQueue = [];
 };
 
+const attachUserMessage = (error) => {
+  if (!error.response) {
+    error.userMessage = 'Network error. Please check your connection and try again.';
+  } else {
+    error.userMessage = error.response.data?.message || 'Something went wrong. Please try again.';
+  }
+  return error;
+};
+
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
-    // Network error (no response at all) — don't attempt refresh, just fail cleanly
+    // Network error don't attempt refresh, just fail cleanly
     if (!error.response) {
-      return Promise.reject(error);
+      return Promise.reject(attachUserMessage(error));
     }
 
     // Don't try to refresh on the /auth/me check itself, or on the refresh call, or on login/register
@@ -44,13 +53,13 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (refreshError) {
         processQueue(refreshError);
-        return Promise.reject(refreshError);
+        return Promise.reject(attachUserMessage(refreshError));
       } finally {
         isRefreshing = false;
       }
     }
 
-    return Promise.reject(error);
+    return Promise.reject(attachUserMessage(error));
   }
 );
 
