@@ -9,6 +9,7 @@ import {
   compareVersions,
 } from '../controllers/resumeController.js';
 
+
 const router = express.Router();
 
 router.use(authMiddleware); // every resume route requires login
