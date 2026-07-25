@@ -21,7 +21,8 @@ export const getAllUsers = async (req, res) => {
       pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
     });
   } catch (error) {
-    return errorResponse(res, 500, error.message);
+    console.error('Get All Users Error:', error);
+    return errorResponse(res, 500, 'Failed to fetch users. Please try again.');
   }
 };
 
@@ -38,7 +39,8 @@ export const getUserById = async (req, res) => {
 
     return successResponse(res, 200, 'User details fetched', { user, resumes, applications });
   } catch (error) {
-    return errorResponse(res, 500, error.message);
+    console.error('Get User By Id Error:', error);
+    return errorResponse(res, 500, 'Failed to fetch user details. Please try again.');
   }
 };
 
@@ -72,7 +74,8 @@ export const updateUserRole = async (req, res) => {
 
     return successResponse(res, 200, 'Role updated', targetUser);
   } catch (error) {
-    return errorResponse(res, 500, error.message);
+    console.error('Update User Role Error:', error);
+    return errorResponse(res, 500, 'Failed to update user role. Please try again.');
   }
 };
 
@@ -108,7 +111,8 @@ export const deleteUser = async (req, res) => {
 
     return successResponse(res, 200, 'User and their data deleted');
   } catch (error) {
-    return errorResponse(res, 500, error.message);
+    console.error('Delete User Error:', error);
+    return errorResponse(res, 500, 'Failed to delete user. Please try again.');
   }
 };
 
@@ -134,7 +138,8 @@ export const getPlatformStats = async (req, res) => {
       applicationsByStatus: statusBreakdown.reduce((acc, s) => ({ ...acc, [s._id]: s.count }), {}),
     });
   } catch (error) {
-    return errorResponse(res, 500, error.message);
+    console.error('Get Platform Stats Error:', error);
+    return errorResponse(res, 500, 'Failed to fetch platform stats. Please try again.');
   }
 };
 
@@ -159,7 +164,8 @@ export const getAllApplications = async (req, res) => {
       pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
     });
   } catch (error) {
-    return errorResponse(res, 500, error.message);
+    console.error('Get All Applications Error:', error);
+    return errorResponse(res, 500, 'Failed to fetch applications. Please try again.');
   }
 };
 
@@ -180,6 +186,7 @@ export const getAuditLogs = async (req, res) => {
       pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
     });
   } catch (error) {
-    return errorResponse(res, 500, error.message);
+    console.error('Get Audit Logs Error:', error);
+    return errorResponse(res, 500, 'Failed to fetch audit logs. Please try again.');
   }
 };
