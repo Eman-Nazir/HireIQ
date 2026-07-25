@@ -28,7 +28,7 @@ export const useUploadResume = () => {
       return data.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['resumes'] }); // auto-refresh list
+      queryClient.invalidateQueries({ queryKey: ['resumes'] }); 
     },
   });
 };
