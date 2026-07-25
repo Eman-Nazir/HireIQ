@@ -33,13 +33,13 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/api', apiLimiter);
+app.use('/api/v1', apiLimiter);
 
-app.use('/api/auth', authRoutes);
-app.use('/api/admin', adminRoutes);
-app.use('/api/resume', resumeRoutes);
-app.use('/api/ai', aiRoutes);
-app.use('/api/application', applicationRoutes);
+app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/admin', adminRoutes);
+app.use('/api/v1/resume', resumeRoutes);
+app.use('/api/v1/ai', aiRoutes);
+app.use('/api/v1/application', applicationRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
