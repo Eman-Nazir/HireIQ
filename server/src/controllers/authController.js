@@ -52,7 +52,8 @@ export const register = async (req, res) => {
       user: { id: user._id, name: user.name, email: user.email, role: user.role },
     });
   } catch (error) {
-    return errorResponse(res, 500, error.message);
+    console.error('Register Error:', error);
+    return errorResponse(res, 500, 'Failed to register. Please try again.');
   }
 };
 
@@ -73,14 +74,20 @@ export const login = async (req, res) => {
       user: { id: user._id, name: user.name, email: user.email, role: user.role },
     });
   } catch (error) {
-    return errorResponse(res, 500, error.message);
+    console.error('Login Error:', error);
+    return errorResponse(res, 500, 'Failed to log in. Please try again.');
   }
 };
 
 // GET /api/auth/google/callback
 export const googleCallback = async (req, res) => {
-  await issueTokens(res, req.user, req.headers['user-agent']);
-  res.redirect(`${process.env.CLIENT_URL}/dashboard`);
+  try {
+    await issueTokens(res, req.user, req.headers['user-agent']);
+    res.redirect(`${process.env.CLIENT_URL}/dashboard`);
+  } catch (error) {
+    console.error('Google Callback Error:', error);
+    res.redirect(`${process.env.CLIENT_URL}/login?error=google_auth_failed`);
+  }
 };
 
 // POST /api/auth/refresh
@@ -105,7 +112,8 @@ export const refreshAccessToken = async (req, res) => {
 
     return successResponse(res, 200, 'Token refreshed');
   } catch (error) {
-    return errorResponse(res, 500, error.message);
+    console.error('Refresh Token Error:', error);
+    return errorResponse(res, 500, 'Failed to refresh session. Please log in again.');
   }
 };
 
@@ -116,7 +124,8 @@ export const getMe = async (req, res) => {
     if (!user) return errorResponse(res, 404, 'User not found');
     return successResponse(res, 200, 'User fetched', user);
   } catch (error) {
-    return errorResponse(res, 500, error.message);
+    console.error('Get Me Error:', error);
+    return errorResponse(res, 500, 'Failed to fetch your profile. Please try again.');
   }
 };
 
@@ -131,7 +140,8 @@ export const logout = async (req, res) => {
     res.clearCookie('refreshToken', refreshCookieOptions);
     return successResponse(res, 200, 'Logged out successfully');
   } catch (error) {
-    return errorResponse(res, 500, error.message);
+    console.error('Logout Error:', error);
+    return errorResponse(res, 500, 'Failed to log out. Please try again.');
   }
 };
 
@@ -143,10 +153,10 @@ export const logoutAllDevices = async (req, res) => {
     res.clearCookie('refreshToken', refreshCookieOptions);
     return successResponse(res, 200, 'Logged out from all devices');
   } catch (error) {
-    return errorResponse(res, 500, error.message);
+    console.error('Logout All Devices Error:', error);
+    return errorResponse(res, 500, 'Failed to log out from all devices. Please try again.');
   }
 };
-
 
 // PATCH /api/auth/profile
 export const updateProfile = async (req, res) => {
@@ -156,6 +166,7 @@ export const updateProfile = async (req, res) => {
     if (!user) return errorResponse(res, 404, 'User not found');
     return successResponse(res, 200, 'Profile updated', user);
   } catch (error) {
-    return errorResponse(res, 500, error.message);
+    console.error('Update Profile Error:', error);
+    return errorResponse(res, 500, 'Failed to update profile. Please try again.');
   }
 };
