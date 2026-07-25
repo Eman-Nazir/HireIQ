@@ -22,7 +22,7 @@ export default function JobTracker() {
         showToast(`Added ${form.role} at ${form.company}`, 'success');
       },
       onError: (err) => {
-        showToast(err?.response?.data?.message || 'Failed to add application', 'error');
+        showToast(err.userMessage, 'error');
       },
     });
   };
