@@ -2,18 +2,7 @@ import Resume from '../models/Resume.js';
 import { extractTextFromPDF } from '../services/pdfService.js';
 import { uploadPDFToCloudinary, deleteFromCloudinary } from '../services/cloudinaryUploadService.js';
 import { successResponse, errorResponse } from '../utils/apiResponse.js';
-
-// Lightweight heuristic check — not perfect, but filters out obviously non-resume PDFs
-const looksLikeResume = (text) => {
-  if (!text || text.length < 100) return false;
-  const keywords = [
-    'experience', 'education', 'skills', 'work', 'project',
-    'university', 'college', 'email', 'phone', 'objective', 'summary',
-  ];
-  const lowerText = text.toLowerCase();
-  const matchCount = keywords.filter((kw) => lowerText.includes(kw)).length;
-  return matchCount >= 3;
-};
+import { classifyResumeText } from '../services/aiService.js';
 
 // POST /api/resume/upload
 export const uploadResume = async (req, res) => {
@@ -23,8 +12,15 @@ export const uploadResume = async (req, res) => {
 
     const parsedText = await extractTextFromPDF(req.file.buffer);
 
-    if (!looksLikeResume(parsedText)) {
-      return errorResponse(res, 400, "This file doesn't appear to be a resume. Please upload an actual resume PDF.");
+    // Fast heuristic gate  catches empty/garbage PDFs cheaply
+    if (!parsedText || parsedText.trim().length < 100) {
+      return errorResponse(res, 400, "This file doesn't appear to contain readable resume content.");
+    }
+
+    // AI-based classification  catches guides, articles, and other non-resume documents
+    const classification = await classifyResumeText(parsedText);
+    if (!classification.isResume) {
+      return errorResponse(res, 400, classification.reason || "This file doesn't appear to be a resume. Please upload an actual resume PDF.");
     }
 
     const cloudinaryResult = await uploadPDFToCloudinary(req.file.buffer, req.file.originalname);
@@ -44,7 +40,8 @@ export const uploadResume = async (req, res) => {
 
     return successResponse(res, 201, 'Resume uploaded successfully', resume);
   } catch (error) {
-    return errorResponse(res, 500, error.message);
+    console.error('Upload Resume Error:', error);
+    return errorResponse(res, 500, 'Failed to upload resume. Please try again.');
   }
 };
 
@@ -69,7 +66,8 @@ export const getResumes = async (req, res) => {
       pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
     });
   } catch (error) {
-    return errorResponse(res, 500, error.message);
+    console.error('Get Resumes Error:', error);
+    return errorResponse(res, 500, 'Failed to fetch resumes. Please try again.');
   }
 };
 
@@ -81,7 +79,8 @@ export const getResumeById = async (req, res) => {
 
     return successResponse(res, 200, 'Resume fetched', resume);
   } catch (error) {
-    return errorResponse(res, 500, error.message);
+    console.error('Get Resume By Id Error:', error);
+    return errorResponse(res, 500, 'Failed to fetch resume. Please try again.');
   }
 };
 
@@ -96,7 +95,8 @@ export const deleteResume = async (req, res) => {
 
     return successResponse(res, 200, 'Resume deleted successfully');
   } catch (error) {
-    return errorResponse(res, 500, error.message);
+    console.error('Delete Resume Error:', error);
+    return errorResponse(res, 500, 'Failed to delete resume. Please try again.');
   }
 };
 
@@ -112,6 +112,7 @@ export const compareVersions = async (req, res) => {
 
     return successResponse(res, 200, 'Comparison fetched', resumes);
   } catch (error) {
-    return errorResponse(res, 500, error.message);
+    console.error('Compare Versions Error:', error);
+    return errorResponse(res, 500, 'Failed to compare resume versions. Please try again.');
   }
 };
