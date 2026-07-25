@@ -10,7 +10,7 @@ import { useToast } from '../hooks/useToast';
 export default function ResumeAnalyzer() {
   const { data } = useResumes();
   const [selectedResumeId, setSelectedResumeId] = useState(null);
-  const { mutate: scoreResume, data: scoreResult, isPending, isError, error } = useScoreResume();
+  const { mutate: scoreResume, data: scoreResult, isPending, isError, error, reset } = useScoreResume();
   const { showToast } = useToast();
 
   const latestResume = data?.resumes?.[0];
@@ -18,11 +18,12 @@ export default function ResumeAnalyzer() {
 
   const handleScore = (jobDescription) => {
     if (!activeResumeId) return;
+    reset();
     scoreResume(
       { resumeId: activeResumeId, jobDescription },
       {
         onSuccess: (result) => showToast(`Scored ${result.atsScore}% match`, 'success'),
-        onError: (err) => showToast(err?.response?.data?.message || 'Failed to score resume', 'error'),
+        onError: (err) => showToast(err.userMessage, 'error'),
       }
     );
   };
@@ -43,7 +44,11 @@ export default function ResumeAnalyzer() {
           </div>
         )}
 
-        {isError && <p className="text-sm text-red-500 mt-3 text-center">{error.message}</p>}
+        {isError && (
+          <p className="text-sm text-red-500 mt-3 text-center">
+            {error.userMessage}
+          </p>
+        )}
         <ScoreCard result={scoreResult} />
       </div>
     </div>
