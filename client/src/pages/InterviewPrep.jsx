@@ -16,12 +16,13 @@ const filters = [
 export default function InterviewPrep() {
   const { data } = useResumes();
   const latestResume = data?.resumes?.[0];
-  const { mutate: getQuestions, data: result, isPending, isError, error } = useInterviewQuestions();
+  const { mutate: getQuestions, data: result, isPending, isError, error, reset } = useInterviewQuestions();
   const { showToast } = useToast();
   const [activeFilter, setActiveFilter] = useState('all');
 
   const handleGenerate = (jobDescription) => {
     if (!latestResume) return;
+    reset(); 
     getQuestions(
       { resumeId: latestResume._id, jobDescription },
       {
@@ -29,10 +30,11 @@ export default function InterviewPrep() {
           showToast(`Generated ${data.questions.length} interview questions`, 'success');
           setActiveFilter('all');
         },
-        onError: (err) => showToast(err?.response?.data?.message || 'Failed to generate questions', 'error'),
+        onError: (err) => showToast(err.userMessage, 'error'),
       }
     );
   };
+
 
   const filteredQuestions = result?.questions?.filter((q) =>
     activeFilter === 'all' ? true : q.type === activeFilter
@@ -50,7 +52,12 @@ export default function InterviewPrep() {
           <JobDescriptionInput onSubmit={handleGenerate} isPending={isPending} buttonLabel="Generate Questions" />
         )}
 
-        {isError && <p className="text-sm text-red-500 mt-3 text-center">{error.message}</p>}
+
+        {isError && (
+  <p className="text-sm text-red-500 mt-3 text-center">
+    {error.userMessage}
+  </p>
+)}
 
         {result?.questions?.length > 0 && (
           <>
