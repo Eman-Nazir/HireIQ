@@ -12,8 +12,7 @@ import { registerSchema, loginSchema } from '../validators/authValidators.js';
 
 const router = express.Router();
 
-// router.post('/register', authLimiter, register);
-// router.post('/login', authLimiter, login);
+
 router.post('/register', authLimiter, validate(registerSchema), register);
 router.post('/login', authLimiter, validate(loginSchema), login);
 router.post('/logout', logout);
