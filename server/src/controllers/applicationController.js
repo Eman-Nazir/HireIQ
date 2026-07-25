@@ -20,7 +20,8 @@ export const createApplication = async (req, res) => {
 
     return successResponse(res, 201, 'Application created', application);
   } catch (error) {
-    return errorResponse(res, 500, error.message);
+    console.error('Create Application Error:', error);
+    return errorResponse(res, 500, 'Failed to create application. Please try again.');
   }
 };
 
@@ -30,7 +31,8 @@ export const getApplications = async (req, res) => {
     const applications = await Application.find({ userId: req.user.id }).sort({ createdAt: -1 });
     return successResponse(res, 200, 'Applications fetched', applications);
   } catch (error) {
-    return errorResponse(res, 500, error.message);
+    console.error('Get Applications Error:', error);
+    return errorResponse(res, 500, 'Failed to fetch applications. Please try again.');
   }
 };
 
@@ -46,11 +48,12 @@ export const updateApplication = async (req, res) => {
 
     return successResponse(res, 200, 'Application updated', application);
   } catch (error) {
-    return errorResponse(res, 500, error.message);
+    console.error('Update Application Error:', error);
+    return errorResponse(res, 500, 'Failed to update application. Please try again.');
   }
 };
 
-// PATCH /api/application/:id/status — used specifically for drag-and-drop
+// PATCH /api/application/:id/status  used specifically for drag-and-drop
 export const updateApplicationStatus = async (req, res) => {
   try {
     const { status } = req.body;
@@ -67,7 +70,8 @@ export const updateApplicationStatus = async (req, res) => {
 
     return successResponse(res, 200, 'Status updated', application);
   } catch (error) {
-    return errorResponse(res, 500, error.message);
+    console.error('Update Application Status Error:', error);
+    return errorResponse(res, 500, 'Failed to update application status. Please try again.');
   }
 };
 
@@ -79,11 +83,12 @@ export const deleteApplication = async (req, res) => {
 
     return successResponse(res, 200, 'Application deleted');
   } catch (error) {
-    return errorResponse(res, 500, error.message);
+    console.error('Delete Application Error:', error);
+    return errorResponse(res, 500, 'Failed to delete application. Please try again.');
   }
 };
 
-// GET /api/application/stats — for Dashboard pipeline overview
+// GET /api/application/stats  for Dashboard pipeline overview
 export const getApplicationStats = async (req, res) => {
   try {
     const userObjectId = new mongoose.Types.ObjectId(req.user.id);
@@ -109,6 +114,7 @@ export const getApplicationStats = async (req, res) => {
       byRoleType,
     });
   } catch (error) {
-    return errorResponse(res, 500, error.message);
+    console.error('Get Application Stats Error:', error);
+    return errorResponse(res, 500, 'Failed to fetch application stats. Please try again.');
   }
 };
