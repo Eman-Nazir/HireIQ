@@ -14,7 +14,6 @@ passport.use(
         let user = await User.findOne({ googleId: profile.id });
 
         if (!user) {
-          // Check if email already exists (local account) — link accounts
           user = await User.findOne({ email: profile.emails[0].value });
           if (user) {
             user.googleId = profile.id;
