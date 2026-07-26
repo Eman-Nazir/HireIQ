@@ -1,9 +1,22 @@
 import axios from 'axios';
+import axiosRetry from 'axios-retry';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   withCredentials: true,
-  timeout: 30000, 
+  timeout: 30000,
+});
+
+// Automatically retry requests that fail due to network errors,
+// timeouts, or cold-start-related failures (no response received).
+axiosRetry(api, {
+  retries: 2,
+  retryDelay: (retryCount) => retryCount * 1500, 
+  retryCondition: (error) => {
+    // Retry on network errors / no response (covers cold starts, dropped connections)
+    // Do NOT retry on actual server responses like 400/401/404/500 — those are real answers, not failures
+    return !error.response;
+  },
 });
 
 let isRefreshing = false;
