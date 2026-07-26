@@ -30,7 +30,7 @@
 
 ![HireIQ Demo](docs/demo.gif)
 
-**[Live Demo →](#)** *(add your deployed link here)*
+**[Live Demo →](#)** *https://hireiq-client.vercel.app/*
 
 ---
 
