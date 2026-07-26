@@ -11,11 +11,19 @@ export default function UploadBox() {
   const [jobDescription, setJobDescription] = useState('');
   const inputRef = useRef(null);
 
-  const { mutate: uploadResume, isPending, isError, error } = useUploadResume();
+  const { mutate: uploadResume, isPending, isError, error, reset } = useUploadResume();
   const { showToast } = useToast();
 
   const handleFile = (selectedFile) => {
-    if (selectedFile?.type === 'application/pdf') setFile(selectedFile);
+    if (selectedFile?.type === 'application/pdf') {
+      reset();
+      setFile(selectedFile);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    handleFile(e.target.files[0]);
+    e.target.value = '';
   };
 
   const handleDrop = (e) => {
@@ -35,7 +43,7 @@ export default function UploadBox() {
           showToast('Resume uploaded successfully', 'success');
         },
         onError: (err) => {
-          showToast(err.userMessage, 'error');
+          showToast(err?.response?.data?.message || 'Upload failed', 'error');
         },
       }
     );
@@ -51,14 +59,20 @@ export default function UploadBox() {
         className={`relative rounded-xl border-2 border-dashed p-10 text-center cursor-pointer transition-colors duration-200
           ${isDragging ? 'border-primary-500 bg-primary-50' : 'border-[var(--color-border)] bg-[var(--color-surface-card)]'}`}
       >
-        <input ref={inputRef} type="file" accept="application/pdf" className="hidden" onChange={(e) => handleFile(e.target.files[0])} />
+        <input
+          ref={inputRef}
+          type="file"
+          accept="application/pdf"
+          className="hidden"
+          onChange={handleInputChange}
+        />
 
         <AnimatePresence mode="wait">
           {file ? (
             <motion.div key="file" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-center gap-3">
               <FileText className="w-6 h-6 text-primary-500" />
               <span className="text-sm text-[var(--color-text-primary)]">{file.name}</span>
-              <button onClick={(e) => { e.stopPropagation(); setFile(null); }} className="text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors">
+              <button onClick={(e) => { e.stopPropagation(); setFile(null); reset(); }} className="text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors">
                 <X className="w-4 h-4" />
               </button>
             </motion.div>
@@ -86,7 +100,7 @@ export default function UploadBox() {
         {isPending ? 'Uploading...' : 'Upload Resume'}
       </Button>
 
-      {isError && <p className="text-xs text-red-500 mt-2">{error.userMessage}</p>}
+      {isError && <p className="text-xs text-red-500 mt-2">{error?.response?.data?.message || 'Upload failed'}</p>}
     </div>
   );
 }
